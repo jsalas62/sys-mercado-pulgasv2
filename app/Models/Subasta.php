@@ -106,6 +106,7 @@ class Subasta extends Model
         return $subasta;
     }
 
+    // Front subastas x categorías
     public static function getSubastasFrontxUrlCategoria($url, $order)
     {
 
@@ -140,6 +141,7 @@ class Subasta extends Model
 
     }
 
+      // Front subastas x nombre del producto (buscar)
     public static function getProductsView($productobuscar, $order)
     {
         $subastas = Subasta::select('subastas.subasta_id','subastas.user_id','subastas.producto_id','subastas.precio_min',

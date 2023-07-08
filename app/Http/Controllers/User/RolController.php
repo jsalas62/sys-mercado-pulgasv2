@@ -27,6 +27,7 @@ class RolController extends Controller
     public function __construct()  
     {
         $this->middleware('auth');
+        $this->middleware('can:admin.roles.index');
     }
     
     public function index(Request $request)

@@ -23,6 +23,24 @@
 
 @include('front-partials.navbar-account')
 
+<div class="container-fluid container-xxl">
 
+    <div class="slider-main mt-5">
+
+        <div class="slider-item">
+            <img class="img-fluid d-block w-100" src="{{asset('assets/images/slider1.webp')}}" title="Slider" width="40">
+        </div>
+
+        <div class="slider-item">
+            <img class="img-fluid d-block w-100" src="{{asset('assets/images/slider2.jpg')}}" title="Slider">
+        </div>
+
+        <div class="slider-item">
+            <img class="img-fluid d-block w-100" src="{{asset('assets/images/slider3.jpg')}}" title="Slider">
+        </div>
+
+    </div>
+
+</div>
 
 @endsection

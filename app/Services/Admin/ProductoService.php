@@ -11,7 +11,7 @@ class ProductoService
 {
     public static function ArrayProductoAdd($request, $filename, $username)
     {
-        $urlproducto = Str::slug($request->nombreProducto);
+        $urlproducto = Str::slug($request->nombreProducto).'-'.date('Y').date('m').date('d').date('H').date('i').date('s');
         $estado = $request->chkEstadoProducto == "on" ? "1":"0";
         $oculto =0;
         $urlimagen = "assets/images/productos/".$filename;
@@ -32,7 +32,7 @@ class ProductoService
 
     public static function ArrayProductoUpdate($request, $filename, $temporal, $username)
     {
-        $urlproducto = Str::slug($request->nombreProducto);
+        $urlproducto = Str::slug($request->nombreProducto).'-'.date('Y').date('m').date('d').date('H').date('i').date('s');
         $estado = $request->chkEstadoProducto == "on" ? "1":"0";
         $oculto =0;
         if($temporal=="1"):

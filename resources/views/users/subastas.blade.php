@@ -54,6 +54,8 @@
         
     </div>
 
+    @can('admin.subasta.crear')
+
     <div class="row px-4">
         <div class="col-xl-12 col-md-12 col-sm-12 d-flex justify-content-end mt-4">
 
@@ -63,6 +65,8 @@
 
         </div>
     </div>
+
+    @endcan
 
     <div class="row mt-3">
 
@@ -139,6 +143,10 @@
                             <tr>
                                 <td><img src="{{ url('admin_assets/images/pujas.png') }}" alt="Eliminar" style="width:22px;height:22px;"></td>
                                 <td style="font-size:14px">Ver pujas</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{{ url('admin_assets/images/data-ganador.png') }}" alt="Eliminar" style="width:22px;height:22px;"></td>
+                                <td style="font-size:14px">Ver Datos del Ganador</td>
                             </tr>
                         </tbody>
                     </table>
@@ -223,7 +231,7 @@
 
                 <div class="modal-footer">
 
-                    <button type="submit" class="btn btn-dark" id="btnGuardarSubasta"> <img src="{{ url('admin_assets/images/save.png') }}" width="20px" height="20px"> GUARDAR</button>
+                    <button type="submit" class="btn btn-dark btn-pri" id="btnGuardarSubasta"> <img src="{{ url('admin_assets/images/save.png') }}" width="20px" height="20px"> GUARDAR</button>
                     <button type="button" class="btn btn-secondary" id="btnCerrarSubasta" data-bs-dismiss="modal" onclick="limpiarModalSubasta()"> <img src="{{ url('admin_assets/images/cancel.png') }}" width="20px" height="20px"> CERRAR</button>
                 
                 </div>
@@ -275,6 +283,57 @@
         </div>
     </div>
 </div>
+
+
+  <!--Bootstrap modal -->
+  <div class="modal fade" id="ModalGanadorData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog" role="document" style="margin-top:20px;">
+            <div class="modal-content">
+                <!-- Modal heading -->
+                <div class="modal-header">
+                    <h4 class="modal-title" id="ModalTitleDataGanador">
+                       
+                    </h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclicK="LimpiarGanadorModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Modal body with image -->
+                <div class="modal-body">
+                    <div class="input-group">
+                        <span class="fw-bold">Nombre:</span>&nbsp;&nbsp;
+                        <label for=""id="lblNGanador"></label>
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="fw-bold">Apellidos:</span>&nbsp;&nbsp;
+                        <label for=""id="lblAGanador"></label>
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="fw-bold">Email:</span>&nbsp;&nbsp;
+                        <label for=""id="lblEGanador"></label>
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="fw-bold">Teléfono:</span>&nbsp;&nbsp;
+                        <label for=""id="lblTGanador"></label>
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="fw-bold">Dirección:</span>&nbsp;&nbsp;
+                        <label for=""id="lblDGanador"></label>
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="fw-bold">Usuario:</span>&nbsp;&nbsp;
+                        <label for=""id="lblUGanador"></label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btnCloseModalDataGanador" data-bs-dismiss="modal" onclick="LimpiarGanadorModal()"> <img src="{{ url('admin_assets/images/cancel.png') }}" width="20px" height="20px"> CERRAR</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 
 @endsection

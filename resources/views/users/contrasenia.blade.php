@@ -70,7 +70,7 @@
 
             <div class="card-footer">
                 <div class="form-group">
-                    <button type="submit" class="btn btn-dark btn-icon-split" id="guardarPassUser"><span class="icon text-white-50"><img src="{{ url('admin_assets/images/save.png') }}" width="24px"></span><span class="text">Guardar</span></button> 
+                    <button type="submit" class="btn btn-dark btn-pri btn-icon-split" id="guardarPassUser"><span class="icon text-white-50"><img src="{{ url('admin_assets/images/save.png') }}" width="24px"></span><span class="text">Guardar</span></button> 
                 </div>
             </div>
 

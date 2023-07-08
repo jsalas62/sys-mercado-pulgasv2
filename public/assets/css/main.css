@@ -60,7 +60,7 @@ h1 ,h2 ,h3, h4, h5, h6,
 }
 
 .input-group .form-control:focus, .input-group .input-group-append .btn:focus, .btn:focus, .divCartEmpty .btn:focus,
-.form-group .form-control:focus, .custom-form-input:focus
+.form-group .form-control:focus, .custom-form-input:focus, .page-link:focus
 {
     /* outline:none !important;
     outline-offset: 0; */
@@ -818,6 +818,26 @@ font-size:1.25rem;
     opacity: 1;
   }
 
+  .bg-recepcion
+  {
+    background-color: #5A155B;
+  }
+
+  .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.page-link
+{
+    color: var(--primary-color);
+}
+
+.page-link:hover 
+{
+    color: var(--primary-color);
+}
+
 /* 
  .did-floating-input
  {
@@ -883,6 +903,27 @@ font-size:1.25rem;
     {
         margin-bottom: 2rem;
     }
+
+    .login-wrap
+    {
+        padding:0;
+    }
+
+    .logo-admin
+    {
+        width: 220px;
+    }
+
+    #apellidosUsuario
+    {
+        margin-top: 20px;
+    }
+
+    .btn-send-link,.text-back-login
+    {
+        font-size: 12px !important;
+    }
+
 }
 
 @media screen and (min-width: 577px) and (max-width:767px)
@@ -891,6 +932,17 @@ font-size:1.25rem;
         width:70%;
         text-align: center;
     }
+
+    .logo-admin
+    {
+        width: 220px  !important;
+    }
+
+    .btn-send-link,.text-back-login
+    {
+        font-size: 14px !important;
+    }
+  
 }
 
 @media screen and (min-width: 768px) and (max-width:991px)
@@ -898,6 +950,11 @@ font-size:1.25rem;
     .mp-grid-header__logo {
         width:80%;
         text-align: center;
+    }
+
+    .logo-admin
+    {
+        width: 220px  !important;
     }
 }
 

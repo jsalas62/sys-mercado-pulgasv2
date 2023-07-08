@@ -30,24 +30,61 @@
                         <td class="text-muted">{{ $subas->usuario }}</td>
                         @if($subas->estado==1)
                             <td><span class="badge rounded-pill bg-success">Disponible</span></td>
-                        @else 
+                        @endif
+
+                        @if($subas->estado==2)
                            <td><span class="badge rounded-pill bg-danger">Finalizada</span></td>
                         @endif
+
+                        @if($subas->estado==3)
+                           <td><span class="badge rounded-pill bg-warning">Cancelada</span></td>
+                        @endif
+
+                        @if($subas->estado==4)
+                           <td><span class="badge rounded-pill bg-info">Verificada</span></td>
+                        @endif
+
+                        @if($subas->estado==5)
+                           <td><span class="badge rounded-pill bg-primary">Entregado</span></td>
+                        @endif
+
                         <td>
-                            <div class="btn-group" role="group">
-              
-                                <img src="{{ url('admin_assets/images/edit.png') }}" onclick="mostrarSubasta(<?php echo "'".$parameter."'"; ?>)" title="Editar Subasta" style="cursor: pointer; height:24px; width:24px;">
-
-                                
-                                <img src="{{ url('admin_assets/images/delete3.png') }}" onclick="eliminarSubasta(<?php echo "'".$parameter."'"; ?>)" title="Eliminar Subasta" style="cursor: pointer; height:24px; width:24px;">
-
+                            <div class="btn-group gap-2" role="group">
+                               
                                 @if($subas->estado==1)
-                                    <img src="{{ url('admin_assets/images/time.png') }}" onclick="terminarSubasta(<?php echo "'".$parameter."'"; ?>)" title="Terminar Subasta" style="cursor: pointer; height:24px; width:24px;">
+                                    <!-- No arreglar Subata -->
+                                    @can('admin.subata.editar')
+                                    <img src="{{ url('admin_assets/images/edit.png') }}" onclick="mostrarSubasta(<?php echo "'".$parameter."'"; ?>)" title="Editar Subasta" style="cursor: pointer; height:24px; width:24px;">
+                                    @endcan
+                              
+                                    @can('admin.subasta.eliminar')
+                                    <img src="{{ url('admin_assets/images/delete3.png') }}" onclick="eliminarSubasta(<?php echo "'".$parameter."'"; ?>)" title="Eliminar Subasta" style="cursor: pointer; height:24px; width:24px;">
+                                    @endcan
                                 @endif
 
-                                @if($subas->pujas > 0)
-                                <img src="{{ url('admin_assets/images/pujas.png') }}" onclick="verPujas(<?php echo "'".$parameter."'"; ?>)" title="Ver Pujas" style="cursor: pointer; height:24px; width:24px; margin-left:2px;">
+                                @if($subas->estado == 2)
+                                    @can('admin.subata.editar')
+                                    <img src="{{ url('admin_assets/images/edit.png') }}" onclick="mostrarSubasta(<?php echo "'".$parameter."'"; ?>)" title="Editar Subasta" style="cursor: pointer; height:24px; width:24px;">
+                                    @endcan
                                 @endif
+
+                                @can('admin.subasta.terminar')
+                                    @if($subas->estado==1)
+                                        <img src="{{ url('admin_assets/images/time.png') }}" onclick="terminarSubasta(<?php echo "'".$parameter."'"; ?>)" title="Finalizar Subasta" style="cursor: pointer; height:24px; width:24px;">
+                                    @endif
+                                @endcan
+
+                                @can('admin.subasta.ver_pujas')
+                                    @if($subas->pujas > 0)
+                                    <img src="{{ url('admin_assets/images/pujas.png') }}" onclick="verPujas(<?php echo "'".$parameter."'"; ?>)" title="Ver Pujas" style="cursor: pointer; height:24px; width:24px; margin-left:2px;">
+                                    @endif
+                                @endcan
+
+                                @can('admin.subasta.ver_ganador')
+                                    @if($subas->estado == 4 || $subas->estado == 5)
+                                    <img src="{{ url('admin_assets/images/data-ganador.png') }}" onclick="showGanador(<?php echo "'".$parameter."'"; ?>)" style="cursor: pointer; height:22px; width:22px;" title="Ver Datos del Ganador" alt="Ver Datos del Ganador"> 
+                                    @endif
+                                @endcan
                             </div>
                         </td>
                     </tr>

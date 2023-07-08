@@ -17,7 +17,7 @@ class CategoriaController extends Controller
     public function __construct()  
     {
         $this->middleware('auth');
-    
+        $this->middleware('can:admin.categorias.index');
     }
 
     public function index(Request $request)

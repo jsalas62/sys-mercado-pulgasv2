@@ -61,8 +61,13 @@
                                 </div>
 
                                 <div class="form-group mt-4">
+                                    <label for="DireccionDataUsuario"><b>Dirección:</b></label>
+                                    <input type="text" class="form-control form-custom-input ml-2" id="DireccionDataUsuario"  name="DireccionDataUsuario" placeholder="Ingrese la Dirección del Usuario.." value="{{ isset($usuariodata) ? $usuariodata->direccion : '' }}">
+                                </div>
+
+                                <div class="form-group mt-4">
                                     <label for="emailUsuario"><b>Email:</b></label>
-                                    <input type="text" class="form-control form-custom-input ml-2" id="emaildatausuario"  name="emaildatausuario" placeholder="Ingrese el Email del Usuario.." value="{{ isset($usuariodata) ? $usuariodata->email : '' }}">
+                                    <input type="text" class="form-control form-custom-input ml-2" id="emaildatausuario"  name="emaildatausuario" placeholder="Ingrese el Email del Usuario.." readonly value="{{ isset($usuariodata) ? $usuariodata->email : '' }}">
                                 </div>
 
                             </div>
@@ -107,7 +112,7 @@
 
                     <div class="card-footer">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-dark btn-icon-split" id="guardarDataUser"><span class="icon text-white-50"><img src="{{ url('admin_assets/images/save.png') }}" width="24px"></span><span class="text">Guardar</span></button> 
+                            <button type="submit" class="btn btn-dark btn-pri btn-icon-split" id="guardarDataUser"><span class="icon text-white-50"><img src="{{ url('admin_assets/images/save.png') }}" width="24px"></span><span class="text">Guardar</span></button> 
                         </div>
                     </div>
 

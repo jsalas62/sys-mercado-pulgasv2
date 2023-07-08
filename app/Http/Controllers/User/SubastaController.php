@@ -10,6 +10,7 @@ use DB, Validator;
 use App\Models\Producto;
 use App\Models\Subasta;
 use App\Models\Puja;
+use App\Models\USer;
 use Auth;
 
 
@@ -21,7 +22,7 @@ class SubastaController extends Controller
     public function __construct()  
     {
         $this->middleware('auth');
-    
+        $this->middleware('can:admin.subasta.index');
     }
 
     public function index(Request $request)
@@ -92,31 +93,37 @@ class SubastaController extends Controller
         else:
             if($request->precio_minimo > 0):
 
-                if($request->fecha_inicio < $request->fecha_fin):
-                    $usuarioActual = Auth::user()->user_id;
-                    $data = [
-                        "user_id" =>$usuarioActual,
-                        "producto_id" =>$request->producto_id,
-                        "precio_min" =>$request->precio_minimo,
-                        "precio_max" => 0,
-                        "tiempo_inicio" => $request->fecha_inicio,
-                        "tiempo_fin" => $request->fecha_fin,
-                        "estado" => 1,
-                        "oculto" => 0
-                    ];
-                    
-                    if(Subasta::create($data)):
-                        return response()->json(['msg'=>'sucess', 'code' => '200']);
-                   else:
-                        return response()->json(['errors'=>$validator->errors(), 'code' => '425']);
-                   endif;
+                if($request->fecha_inicio < now()):
+                    return response()->json(['errors'=>$validator->errors(), 'code' => '426']);
+                else:
 
-                else: 
-                    return response()->json(['errors'=>$validator->errors(), 'code' => '424']);
+                    if($request->fecha_inicio < $request->fecha_fin):
+                        $usuarioActual = Auth::user()->user_id;
+                        $data = [
+                            "user_id" =>$usuarioActual,
+                            "producto_id" =>$request->producto_id,
+                            "precio_min" =>$request->precio_minimo,
+                            "precio_max" => 0,
+                            "tiempo_inicio" => $request->fecha_inicio,
+                            "tiempo_fin" => $request->fecha_fin,
+                            "estado" => 1,
+                            "oculto" => 0
+                        ];
+                        
+                        if(Subasta::create($data)):
+                            return response()->json(['msg'=>'sucess', 'code' => '200']);
+                    else:
+                            return response()->json(['errors'=>$validator->errors(), 'code' => '425']);
+                    endif;
+
+                    else: 
+                        return response()->json(['errors'=>$validator->errors(), 'code' => '424']);
+                    endif;
+
                 endif;
 
             else:
-                return response()->json(['errors'=>$validator->errors(), 'code' => '43']);
+                return response()->json(['errors'=>$validator->errors(), 'code' => '423']);
             endif;
         endif;
 
@@ -177,36 +184,42 @@ class SubastaController extends Controller
         else:
             if($request->precio_minimo > 0):
 
-                if($request->fecha_inicio < $request->fecha_fin):
-                    $decrypt_id = Hashids::decode($subasta_id);
-                    $usuarioActual = Auth::user()->user_id;
-                    $existSubasta = Subasta::ExistProductoInPuja($decrypt_id[0],$usuarioActual, $request->producto_id);
-                    if($existSubasta >  0):
-                        return response()->json(['errors'=>$validator->errors(), 'code' => '426']);
-                    else:
-                        $subasta = Subasta::find($decrypt_id[0]);
+                // if($request->fecha_inicio < now()):
+                //     return response()->json(['errors'=>$validator->errors(), 'code' => '427']);
+                // else:
 
-                        $data = [
-                            "user_id" =>$usuarioActual,
-                            "producto_id" =>$request->producto_id,
-                            "precio_min" =>$request->precio_minimo,
-                            "precio_max" => 0,
-                            "tiempo_inicio" => $request->fecha_inicio,
-                            "tiempo_fin" => $request->fecha_fin,
-                            "estado" => 1,
-                            "oculto" => 0
-                        ];
-                    
-                        if($subasta->update($data)):
-                            return response()->json(['msg'=>'sucess', 'code' => '200']);
+                    if($request->fecha_inicio < $request->fecha_fin):
+                        $decrypt_id = Hashids::decode($subasta_id);
+                        // $usuarioActual = Auth::user()->user_id;
+                        $existSubasta = Subasta::ExistProductoInPuja($decrypt_id[0],$request->producto_id);
+                        if($existSubasta >  0):
+                            return response()->json(['errors'=>$validator->errors(), 'code' => '426']);
                         else:
-                            return response()->json(['errors'=>$validator->errors(), 'code' => '425']);
-                        endif;
-                    endif;
+                            $subasta = Subasta::find($decrypt_id[0]);
 
-                else: 
-                    return response()->json(['errors'=>$validator->errors(), 'code' => '424']);
-                endif;
+                            $data = [
+                                // "user_id" =>$usuarioActual,
+                                "producto_id" =>$request->producto_id,
+                                "precio_min" =>$request->precio_minimo,
+                                "precio_max" => 0,
+                                "tiempo_inicio" => $request->fecha_inicio,
+                                "tiempo_fin" => $request->fecha_fin,
+                                "estado" => 1,
+                                "oculto" => 0
+                            ];
+                        
+                            if($subasta->update($data)):
+                                return response()->json(['msg'=>'sucess', 'code' => '200']);
+                            else:
+                                return response()->json(['errors'=>$validator->errors(), 'code' => '425']);
+                            endif;
+                        endif;
+
+                    else: 
+                        return response()->json(['errors'=>$validator->errors(), 'code' => '424']);
+                    endif;
+                
+                // endif;
 
             else:
                 return response()->json(['errors'=>$validator->errors(), 'code' => '243']);
@@ -250,7 +263,23 @@ class SubastaController extends Controller
             "estado"=>2,
         ];
         if($subasta->update($data)):
+            $pujas = Puja::where('subasta_id',$decrypt_id[0])->where('estado',1)->count();
+            if($pujas > 0):
+                Puja::getMaxPujaxSubata($decrypt_id[0]);
+            endif;
             return response()->json(['msg'=>'sucess', 'code' => '200']);
         endif;    
+    }
+
+    public function getDataUserGanador(Request $request, string $subasta_id)
+    {
+        if (!$request->ajax()):
+            return redirect('/user/subastas');
+        endif;
+
+        $decrypt_id = Hashids::decode($subasta_id);
+        $pujauserganador = Puja::select('user_id')->where('subasta_id',$decrypt_id[0])->whereIn('estado', [5,7])->first();
+        $UsuarioData = User::find($pujauserganador->user_id);
+        return response()->json($UsuarioData);
     }
 }

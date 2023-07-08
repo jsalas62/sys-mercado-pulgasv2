@@ -83,9 +83,9 @@
                 <h5 class="mp-footer_top-title text-center mb-4">Nuestra Tienda</h5>
                 <p class="mp-footer_top-info">📍Calle Roma 324 - San Isidro (Tocar la puerta, no hay timbre). De Lunes a Sábado 🕑 9:30AM a 6:30PM</p>
                 <div class="d-flex justify-content-center">
-                    <button class="btn btn-default btn-ubicacion bradius text-center mt-3" type="button">
+                    <a href="https://maps.google.com?daddr=C. Roma 324, San Isidro 15076" target="_blank" class="btn btn-default btn-ubicacion bradius text-center mt-3" type="button">
                     <i class="fas fa-map-marker" aria-hidden="true"></i> &nbsp;COMO LLEGAR A LA TIENDA
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

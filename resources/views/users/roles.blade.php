@@ -47,6 +47,8 @@
         
     </div>
 
+    @can('admin.roles.crear')
+
     <div class="row px-4">
         <div class="col-xl-12 col-md-12 col-sm-12 d-flex justify-content-end mt-4">
 
@@ -56,6 +58,8 @@
 
         </div>
     </div>
+
+    @endcan
 
     <div class="row mt-3 px-4">
 

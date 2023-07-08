@@ -30,7 +30,7 @@
             </button>
 
             <!-- Logo -->
-            <a class="navbar-brand mp-grid-header__logo me-0 order-lg-1 order-md-2 order-sm-2" href="{{ url('/') }}" title="Mercado de Pulgas">
+            <a class="navbar-brand mp-grid-header__logo me-0 order-lg-1 order-md-2 order-sm-2" href="{{ url('/') }}" title="Mercado de Pulgas" style="width:30% !important;">
                 <img class="img-fluid" src="{{asset('assets/images/logo22.jpg')}}" alt="Mercado de Pulgas" title="Mercado de Pulgas" style="width: 350px; height: auto; transition: all 0.25s ease 0s;" />
             </a>
             @if(Auth::user())
@@ -50,13 +50,6 @@
                     <i class="fas fa-user-circle" aria-hidden="true"></i>
                 </a>
             @endif
-
-            <!-- <a href="#" role="button" class="btn btncart as-grid-header__cart btn-header order-lg-3 order-md-4 order-sm-4" data-bs-toggle="modal" data-bs-target="#ModalCart">
-                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-                <span id="CartCount" class="cart-counter counter" data-cart-render="item_count">2</span>
-            </a> -->
-            
-            <!-- </div> -->
 
         </div>
 
@@ -85,11 +78,6 @@
 
 </header>
 
-<div class="cartmodal">
-
-    @include('front-partials.modal-cart')
-
-</div>
 
 @include('front-partials.menu-offcanvas')
 

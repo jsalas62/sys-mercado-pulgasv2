@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email',80)->unique();
             $table->string('contrasenia');
             $table->string('telefono',20);
+            $table->string('direccion');
             $table->text('foto')->nullable();
             $table->string('estado',1);
             $table->string('oculto',1);

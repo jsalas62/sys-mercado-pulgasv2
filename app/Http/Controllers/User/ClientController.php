@@ -16,6 +16,15 @@ use Auth;
 class ClientController extends Controller
 {
     //
+    public function __construct()
+    {
+        $this->middleware('guest');
+    }
+
+    public function create_user()
+    {
+        return view('create-user');
+    }
 
     public function register_user(Request $request)
     {
@@ -24,9 +33,10 @@ class ClientController extends Controller
             'apellidosUsuario' => 'required',
             'emailUsuario' => 'required|email|unique:users,email',
             'telUsuario' => 'required',
+            'dirUsuario' => 'required',
             'usuarioCreate' => 'required|unique:users,usuario',
-            'passwordCreateUsuario'=>'required|min:6',
-            'passwordSameCreateUsuario'=>'required|min:6|same:passwordCreateUsuario'
+            'passwordCreateUsuario'=>'required|min:8',
+            'passwordSameCreateUsuario'=>'required|min:8|same:passwordCreateUsuario'
         ];
         
         $messages = [
@@ -36,10 +46,11 @@ class ClientController extends Controller
             'emailUsuario.email' => 'El Email del Usuario debe ser una dirección Válida',
             'emailUsuario.unique' => 'Ya existe el correo registrado',
             'telUsuario.required' => 'El campo Teléfono es requerido',
+            'dirUsuario.required' => 'El campo Dirección es requerido',
             'usuarioCreate.required' => 'El campo Usuario es requerido',
             'usuarioCreate.unique' => 'Ya existe el Usuario',
             'passwordCreateUsuario.required' => 'El Campo Contraseña es requerido',
-            'passwordCreateUsuario.min' => 'La contraseña debe contener al menos 6 carácteres',
+            'passwordCreateUsuario.min' => 'La contraseña debe contener al menos 8 carácteres',
             'passwordSameCreateUsuario.required' => 'Es necesario confirmar la contraseña',
             'passwordSameCreateUsuario.min' => 'La confirmación de contraseña debe contener al menos 6 carácteres',
             'passwordSameCreateUsuario.same' => 'Las contraseñas no coinciden.'
@@ -57,14 +68,15 @@ class ClientController extends Controller
                 "usuario" => $request->usuarioCreate,
                 "email" => $request->emailUsuario,
                 "password"=>Hash::make(trim($request->input('passwordCreateUsuario'))),
-                "telefono" => $request->telUsuario
+                "telefono" => $request->telUsuario,
+                "direccion" => $request->dirUsuario
             ];
 
             if($usuario = User::create($data)):
 
                 $usuario->roles()->sync('4');
-                Auth::login($usuario);
-                return redirect()->route('index');
+                // Auth::login($usuario); -- Iniciar Sesión luego de registrar
+                return redirect()->route('login');
             else:
                 return back()->with('msg','Hubo en Error al procesar el registro.')->with('typealert','danger');
             endif;

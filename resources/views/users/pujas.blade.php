@@ -29,12 +29,16 @@
        
         <div class="col-xl-5 col-md-5 col-sm-12">
             <div class="form-group">
-                <label for="estadoCategoriaBuscar" style="font-size:14px;">Estado:</label>
-                <select name="estadoCategoriaBuscar" id="estadoCategoriaBuscar" class="form-control form-custom-input">
+                <label for="estadoPujaBuscar" style="font-size:14px;">Estado:</label>
+                <select name="estadoPujaBuscar" id="estadoPujaBuscar" class="form-control form-custom-input">
                     <option value="_all_">--Seleccione--</option>
                     <option value="1">Pendiente</option>
-                    <option value="2">Ganada</option>
+                    <option value="3">Ganada</option>
                     <option value="2">Pérdida</option>
+                    <option value="4">En proceso</option>
+                    <option value="5">Verificado</option>
+                    <option value="6">Rechazado</option>
+                    <option value="7">Recepcionado</option>
                 </select>
             </div>
         </div>
@@ -52,7 +56,7 @@
                     <i class="fas fa-cubes"></i>
                         Listado de Pujas
                     </h4>
-                    <section class="subastas">
+                    <section class="pujas">
                         @if(isset($pujas) && count($pujas) > 0)
                             @include('users.data.pujas-data')
                         
@@ -101,13 +105,29 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><img src="{{ url('admin_assets/images/edit.png') }}" alt="Editar" style="width:22px;height:22px;"></td>
-                                <td style="font-size:14px">Editar Subasta</td>
+                                <td><img src="{{ url('admin_assets/images/eye1.png') }}" alt="Ver Producto" style="width:22px;height:22px;"></td>
+                                <td style="font-size:14px">Ver Producto</td>
                             </tr>
                             <tr>
-                                <td><img src="{{ url('admin_assets/images/delete3.png') }}" alt="Eliminar" style="width:22px;height:22px;"></td>
-                                <td style="font-size:14px">Eliminar Subasta</td>
+                                <td><img src="{{ url('admin_assets/images/closed.png') }}" alt="Cerrar Subasta" style="width:22px;height:22px;"></td>
+                                <td style="font-size:14px">Cerrar Subasta</td>
                             </tr>
+
+                            <tr>
+                                <td><img src="{{ url('admin_assets/images/comprobante.png') }}" alt="Visualizar Comprobante" style="width:22px;height:22px;"></td>
+                                <td style="font-size:14px">Visualizar Comprobante</td>
+                            </tr>
+
+                            <tr>
+                                <td><img src="{{ url('admin_assets/images/transport.png') }}" alt="Confirmar Recepción" style="width:22px;height:22px;"></td>
+                                <td style="font-size:14px">Confirmar Recepción</td>
+                            </tr>
+
+                            <tr>
+                                <td><img src="{{ url('admin_assets/images/data-subastador.png') }}" alt="Ver Datos del Subastador" style="width:22px;height:22px;"></td>
+                                <td style="font-size:14px">Ver datos del Subastador</td>
+                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -117,7 +137,88 @@
 
 </div>
 
+    <!--Bootstrap modal -->
+    <div class="modal fade" id="ModalComprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog" role="document" style="margin-top:20px;">
+            <div class="modal-content">
+                <!-- Modal heading -->
+                <div class="modal-header">
+                    <h4 class="modal-title" id="ModalComprobanteLabel">
+                        Comprobante de Pago
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclicK="limpiarModalComprobante()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Modal body with image -->
+                <div class="modal-body">
+                    <img id="imgComprobante" src="" width="450px" height="450px" />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btnCerrarCategoria" data-bs-dismiss="modal" onclick="limpiarModalComprobante()"> <img src="{{ url('admin_assets/images/cancel.png') }}" width="20px" height="20px"> CERRAR</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--Bootstrap modal -->
+    <div class="modal fade" id="ModalSubastadorData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog" role="document" style="margin-top:20px;">
+            <div class="modal-content">
+                <!-- Modal heading -->
+                <div class="modal-header">
+                    <h4 class="modal-title" id="ModalTitleData">
+                       
+                    </h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclicK="LimpiarSubastadorModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Modal body with image -->
+                <div class="modal-body">
+                    <div class="input-group">
+                        <span class="fw-bold">Nombre:</span>&nbsp;&nbsp;
+                        <label for=""id="lblNSubastador"></label>
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="fw-bold">Apellidos:</span>&nbsp;&nbsp;
+                        <label for=""id="lblASubastador"></label>
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="fw-bold">Email:</span>&nbsp;&nbsp;
+                        <label for=""id="lblESubastador"></label>
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="fw-bold">Teléfono:</span>&nbsp;&nbsp;
+                        <label for=""id="lblTSubastador"></label>
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="fw-bold">Dirección:</span>&nbsp;&nbsp;
+                        <label for=""id="lblDSubastador"></label>
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="fw-bold">Usuario:</span>&nbsp;&nbsp;
+                        <label for=""id="lblUSubastador"></label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btnCloseModalDataSubatador" data-bs-dismiss="modal" onclick="LimpiarSubastadorModal()"> <img src="{{ url('admin_assets/images/cancel.png') }}" width="20px" height="20px"> CERRAR</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 
+@endsection
+
+@section('scripts')
+
+<script src="{{ asset('assets/js/pujas.js') }}"></script>
 
 @endsection

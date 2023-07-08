@@ -72,13 +72,8 @@
                             </div>
 
                             <div class="col-md-6 col-sm-12">
-                                <label for="cborolusuario"><b>&nbsp;&nbsp;Rol:</b></label>
-                                <select class="form-control form-custom-input ml-2 selectpicker" name="cborolusuario" id="cborolusuario" data-live-search="true">
-                                    <option value="">--Seleccione--</option>
-                                    @foreach($roles as $rol)
-                                        <option value="{{$rol->id}}" {{isset($rol_user) && in_array($rol->id, $rol_user) ? 'selected' : ''}}>{{$rol->name}}</option>
-                                    @endforeach
-                                </select>
+                                <label for="direccionUsuario"><b><span style="color:#AB0505;">(*)</span> Dirección:</b></label>
+                                <input type="text" class="form-control form-custom-input ml-2" id="direccionUsuario"  name="direccionUsuario" placeholder="Ingrese la Dirección del Usuario.." value="{{ isset($usuario) ? $usuario->direccion : '' }}">
                             </div>
 
                         </div>
@@ -106,7 +101,7 @@
                                     data-toggle="tooltip" data-placement="top" title="Ingrese la nueva contraseña si desea modificarla, caso contrario dejarla en blanco"
                                 @endisset
                                 >
-                                <input type="hidden" name="contaseniaUsuarioActual" id="contaseniaUsuarioActual" value="{{ isset($usuario) ? $usuario->contrasenia : '' }}">
+                                <input type="hidden" name="contaseniaUsuarioActual" id="contaseniaUsuarioActual" value="{{ isset($usuario) ? $usuario->password : '' }}">
                                 <small class="text-muted  ml-2"><span style="color:#AB0505;">Las contraseñas no deben contener espacios en blanco</span></small>
                             </div>
 
@@ -123,9 +118,20 @@
                         </div>
 
                         <div class="form-group row mt-4">
+
+                            <div class="col-md-6 col-sm-12">
+                                <label for="cborolusuario"><b>&nbsp;&nbsp;Rol:</b></label>
+                                <select class="form-control form-custom-input ml-2 selectpicker" name="cborolusuario" id="cborolusuario" data-live-search="true">
+                                    <option value="">--Seleccione--</option>
+                                    @foreach($roles as $rol)
+                                        <option value="{{$rol->id}}" {{isset($rol_user) && in_array($rol->id, $rol_user) ? 'selected' : ''}}>{{$rol->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <div class="col-md-6 col-sm-12">
                                 <label for="chkEstadoUsuario"><b>&nbsp;&nbsp;Estado:</b></label>
-                                <div class="custom-control custom-checkbox">
+                                <div class="custom-control custom-checkbox mt-2">
                                     <input type="checkbox" class="custom-control-input" name="chkEstadoUsuario" id="chkEstadoUsuario" {{isset($usuario) && $usuario->estado == 1 ? 'checked':''}}>  
                                     <label class="custom-control-label" for="chkEstadoUsuario">Activo</label>
                                 </div>
@@ -170,7 +176,7 @@
 
                             <p class="help-block font-weight-bold"><span style="color:#AB0505;">Nota: (*) Campos Obligatorios</span></p> 
                             <a class="btn btn-danger btn-icon-split" href="{{ url('/user/usuarios') }}"> <span class="icon text-white-50"><img src="{{ url('admin_assets/images/cancel.png') }}" width="24px"></span><span class="text">Cancelar</span></a>
-                            <button type="submit" class="btn btn-dark btn-icon-split" id="guardarUsuario"><span class="icon text-white-50"><img src="{{ url('admin_assets/images/save.png') }}" width="24px"></span><span class="text">Guardar</span></button> 
+                            <button type="submit" class="btn btn-dark btn-pri btn-icon-split" id="guardarUsuario"><span class="icon text-white-50"><img src="{{ url('admin_assets/images/save.png') }}" width="24px"></span><span class="text">Guardar</span></button> 
                                                 
                         </div>
                     </div>
@@ -353,6 +359,22 @@
                                     '</ul>'
                         });
                     }
+                    else if(response.code=="423")
+                    {
+                        Swal.fire({
+                                icon: 'error',
+                                title: 'ERROR!',
+                                text: 'La contraseña debe tener un mínimo de 8 carácteres'
+                            });
+                    }
+                    else if(response.code=="424")
+                    {
+                        Swal.fire({
+                                icon: 'error',
+                                title: 'ERROR!',
+                                text: 'Las Contraseñas no coinciden!'
+                            });
+                    }
                 },
                 error: function(response) {
                     $("#guardarUsuario").prop('disabled', false);
@@ -428,7 +450,7 @@
                         Swal.fire({
                                 icon: 'error',
                                 title: 'ERROR!',
-                                text: 'La contraseña debe tener un mínimo de 6 carácteres'
+                                text: 'La contraseña debe tener un mínimo de 8 carácteres'
                             });
                     }
                     else if(response.code=="424")

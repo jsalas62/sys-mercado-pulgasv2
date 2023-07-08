@@ -47,6 +47,7 @@
         
     </div>
 
+    @can('admin.categorias.crear')
     <div class="row px-4">
         <div class="col-xl-12 col-md-12 col-sm-12 d-flex justify-content-end mt-4">
 
@@ -56,6 +57,7 @@
 
         </div>
     </div>
+    @endcan
 
     <div class="row mt-3">
 
@@ -197,7 +199,7 @@
 
                 <div class="modal-footer">
 
-                    <button type="submit" class="btn btn-dark" id="btnGuardarCategoria"> <img src="{{ url('admin_assets/images/save.png') }}" width="20px" height="20px"> GUARDAR</button>
+                    <button type="submit" class="btn btn-dark btn-pri" id="btnGuardarCategoria"> <img src="{{ url('admin_assets/images/save.png') }}" width="20px" height="20px"> GUARDAR</button>
                     <button type="button" class="btn btn-secondary" id="btnCerrarCategoria" data-bs-dismiss="modal" onclick="limpiarModalCategoria()"> <img src="{{ url('admin_assets/images/cancel.png') }}" width="20px" height="20px"> CERRAR</button>
                 
                 </div>

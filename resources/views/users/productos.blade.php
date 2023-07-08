@@ -65,6 +65,7 @@
             </div>
         </div>
 
+        @can('admin.productos.crear')
         <div class="col-xl-6 col-md-6 col-sm-12 mt-3">
 
             <div class="form-group mr-20-sm">
@@ -72,6 +73,7 @@
             </div>
 
         </div>
+        @endcan
 
     </div>
 

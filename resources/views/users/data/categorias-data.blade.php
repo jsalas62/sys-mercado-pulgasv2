@@ -26,21 +26,22 @@
                         @endif
                         <td>
                             <div class="btn-group" role="group">
-              
+                                @can('admin.categorias.actualizar')
                                 <img src="{{ url('admin_assets/images/edit.png') }}" onclick="mostrarCategoría(<?php echo "'".$parameter."'"; ?>)" title="Editar Categoría" style="cursor: pointer; height:24px; width:24px;">
-
+                                @endcan
                                 
+                                @can('admin.categorias.borrar')
                                 <img src="{{ url('admin_assets/images/delete3.png') }}" onclick="eliminarCategoría(<?php echo "'".$parameter."'"; ?>)" title="Eliminar Categoría" style="cursor: pointer; height:24px; width:24px;">
-
+                                @endcan
                                 
                                 @if($cat->estado!=0)
-
+                                    @can('admin.categorias.activar')
                                     <img src="{{ url('admin_assets/images/off.png') }}" onclick="desactivarCategoría(<?php echo "'".$parameter."'"; ?>)" title="Desactivar Categoría" style="cursor: pointer; height:24px; width:24px;">&nbsp;
-               
+                                    @endcan
                                 @else 
-
+                                    @can('admin.categorias.desactivar')
                                     <img src="{{ url('admin_assets/images/on.png') }}" onclick="activarCategoria(<?php echo "'".$parameter."'"; ?>)" title="Activar Categoría" style="cursor: pointer; height:24px; width:24px;">&nbsp;
-
+                                    @endcan
                                 @endif
                             </div>
                         </td>

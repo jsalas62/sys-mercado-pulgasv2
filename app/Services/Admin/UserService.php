@@ -23,6 +23,7 @@ class UserService
             "usuario"=>trim($request->txtUsuario),
             "email"=>trim($request->emailUsuario),
             "password" => Hash::make(trim($request->input('contraseniaUsuario'))),
+            "direccion"=>trim($request->direccionUsuario),
             "telefono"=>trim($request->telefonoUsuario),
         ];
 
@@ -55,6 +56,7 @@ class UserService
             "usuario"=>trim($request->txtUsuario),
             "email"=>trim($request->emailUsuario),
             "password" => $password,
+            "direccion"=>trim($request->direccionUsuario),
             "telefono"=>trim($request->telefonoUsuario),
         ];
 

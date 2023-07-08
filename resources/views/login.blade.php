@@ -8,7 +8,7 @@
 
             <div class="col-12 d-flex justify-content-between align-items-center">
                 <a href="{{url('/')}}">
-                    <img class="img-fluid" src="{{asset('assets/images/logo22.jpg')}}" width="358">
+                    <img class="img-fluid logo-admin" src="{{asset('assets/images/logo22.jpg')}}" width="328">
                 </a>
                 <a href="{{url('/')}}" class="login-back-link blue">
                     <i class="fas fa-arrow-left"></i>
@@ -22,120 +22,83 @@
 
     <div class="container-fluid container-xxl mt-3">
 
-        <div class="row row-login d-flex justify-content-center flex-wrap">
+        <div class="row row-login d-flex justify-content-center flex-wrap mt-4">
 
-            <div class="col-md-5 p-5 col-12 login-wrap">
-                <h3 class="login-title">Ingresar</h3>
-                <form id="login-form" class="login-form" action="{{ url('login') }}"  method="POST">
-                    @csrf
-                  
-                  <div class="form-group pl-4 pr-4">
-                      <div class="input-group">
-                          <input type="text" class="form-control form-control-lg form-login-input" id="LoginUsuario" name="LoginUsuario" placeholder="Usuario">
-                      </div>
-                  </div>
+            <div class="col-lg-6 col-md-8 col-12 login-wrap">
 
-                  <div class="form-group pl-4 pr-4 mt-4">
-                      <div class="input-group">
-                          <input type="password" class="form-control form-control-lg form-login-input" id="LoginPassword" name="LoginPassword" placeholder="Contraseña">
-                      </div>
-                  </div>
-                  
-                  <div class="mt-4 pl-4 pr-4 pb-2 mt-4 text-center">
-                      <button type="submit" class="btn btn-lg font-weight-medium btn-pri">Ingresar</button>
-                  </div>
+                <div class="card p-5" style="border-radius:32px;box-shadow: 3px 3px purple, -1em 0 0.4em gray;">
+                    <h3 class="login-title">Ingresar</h3>
+                    <form id="login-form" class="login-form" action="{{ url('login') }}"  method="POST">
+                        @csrf
+                    
+                        <div class="form-group pl-4 pr-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-lg form-login-input" id="LoginUsuario" name="LoginUsuario" placeholder="Usuario">
+                            </div>
+                        </div>
 
-                </form>
+                        <div class="form-group pl-4 pr-4 mt-4">
+                            <div class="input-group">
+                                <input type="password" class="form-control form-control-lg form-login-input" id="LoginPassword" name="LoginPassword" placeholder="Contraseña">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 pl-4 pr-4 pb-2 mt-4 text-center">
+                            <button type="submit" class="btn btn-lg font-weight-medium btn-pri">Ingresar</button>
+                        </div>
 
-                @if(Session::has('message'))
-                  <div class="container">
-                      <div class="alert alert-danger" style="display:none;">
-                          {{ Session::get('message') }}
-                          @if ($errors->any())
-                          <ul>
-                            @foreach($errors->all() as $error)
-                              <li>{{ $error }}</li>
-                            @endforeach
-                          </ul>
-                          @endif
-                      </div>
-                  </div>
-                @endif
+                        <div class="mt-4 pl-4 pr-4 pb-2 text-center">
+                            <a href="{{url('create-user')}}" class="font-weight-medium">¿No tienes cuenta?, Regístrate</a>
+                        </div>
+
+                        <div class="mt-2 pl-4 pr-4 pb-2 text-center">
+                            <a href="{{route('forget.password.get')}}" class="font-weight-medium">¿Olvidaste tu Contraseña?</a>
+                        </div>
+
+                    </form>
+
+                    @if(Session::has('message'))
+                    <div class="container">
+                        @if(Session::has('success'))
+                            <div class="alert alert-success" style="display:none;">
+                        @else
+                            <div class="alert alert-danger" style="display:none;">
+                        @endif
+                        
+                            {{ Session::get('message') }}
+                            @if ($errors->any())
+                            <ul>
+                                @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+
+                    
+                    @if(Session::has('message2'))
+                    <div class="container">
+                        <div class="alert alert-success" style="display:none;">
+                        
+                            {{ Session::get('message2') }}
+                            @if ($errors->any())
+                            <ul>
+                                @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+
+
+                </div>
 
             </div>
-
-            <div class="login-separator"></div>
-
-            <div class="col-md-5 p-5 col-12 login-wrap">
-                <p class="login-subtitle">¿Aún no tienes cuenta?</p>
-                <h3 class="login-title">Regístrate</h3>
-                <form id="create-form" class="create-form mt-4" action="/register-user" method="POST">
-
-                    @csrf
-                    <div class="form-group row">
-
-                        <div class="col-md-6 col-12">
-                            <input type="text" class="form-control form-control-lg form-login-input" id="nameUsuario" name="nameUsuario" placeholder="Nombres">
-                        </div>
-
-                        <div class="col-md-6 col-12">
-                            <input type="text" class="form-control form-control-lg form-login-input" id="apellidosUsuario" name="apellidosUsuario" placeholder="Apellidos">
-                        </div>
-
-                    </div>
-                 
-                    <div class="form-group pl-4 pr-4 mt-4">
-                        <div class="input-group">
-                            <input type="text" class="form-control form-control-lg form-login-input" id="emailUsuario" name="emailUsuario" placeholder="Correo Electrónico">
-                        </div>
-                    </div>
-
-                    <div class="form-group pl-4 pr-4 mt-4">
-                        <div class="input-group">
-                            <input type="text" class="form-control form-control-lg form-login-input" id="telUsuario" name="telUsuario" placeholder="Teléfono">
-                        </div>
-                    </div>
-
-                    <div class="form-group pl-4 pr-4 mt-4">
-                        <div class="input-group">
-                            <input type="text" class="form-control form-control-lg form-login-input" id="usuarioCreate" name="usuarioCreate" placeholder="Usuario">
-                        </div>
-                    </div>
-
-                    <div class="form-group pl-4 pr-4 mt-4">
-                        <div class="input-group">
-                            <input type="password" class="form-control form-control-lg form-login-input" id="passwordCreateUsuario" name="passwordCreateUsuario" placeholder="Contraseña">
-                        </div>
-                    </div>
-
-                    <div class="form-group pl-4 pr-4 mt-4">
-                        <div class="input-group">
-                            <input type="password" class="form-control form-control-lg form-login-input" id="passwordSameCreateUsuario" name="passwordSameCreateUsuario" placeholder="Repetir Contraseña">
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pl-4 pr-4 pb-2 mt-4 text-center">
-                        <button type="submit" class="btn btn-lg font-weight-medium btn-pri">Crear Cuenta</button>
-                    </div>
-
-                </form>
-
-                @if(Session::has('msg'))
-                  <div class="container mt-3">
-                      <div class="alert-create alert-danger p-3" style="display:none;">
-                          {{ Session::get('msg') }}
-                          @if ($errors->any())
-                          <ul>
-                            @foreach($errors->all() as $error)
-                              <li>{{ $error }}</li>
-                            @endforeach
-                          </ul>
-                          @endif
-                      </div>
-                  </div>
-                @endif
-
-            </div>
+      
         </div>
 
     </div>

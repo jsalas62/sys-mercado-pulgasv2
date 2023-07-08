@@ -7,6 +7,7 @@ use Vinkla\Hashids\Facades\Hashids;
 use DB, Validator;
 use App\Models\Subasta;
 use App\Models\Puja;
+use Auth;
 
 class PujaFrontController extends Controller
 {
@@ -35,50 +36,59 @@ class PujaFrontController extends Controller
             $decryptsubasta = Hashids::decode($request->subasta);
 
             $value = Subasta::getPrecioMinimo($decryptsubasta[0]);
-    
+            
+            $usuario =  Auth::user()->user_id;
+
             if($request->puja >= $value->precio_min):
                 
                 $data= [
                     "subasta_id"=>$decryptsubasta[0],
-                    "user_id" => $request->user,
+                    // "user_id" => $request->user,
+                    "user_id" => $usuario,
                     "puja" => $request->puja,
                     "estado" => "1"
                 ];
 
-                $maxValue = Subasta::getPrecioMax($decryptsubasta[0]);
+                $maxValue = Puja::getPrecioMax($decryptsubasta[0]);
 
-                $countPuja = Puja::existPuja($request->user, $decryptsubasta[0]);
-                
-                if($countPuja > 0):
-
-                    $Puja = Puja::find($decryptsubasta[0]);
-
-                    if($Puja->update($data)):
-                       
-                        if($request->puja > $maxValue):
-                            self::updateMaxPago($decryptsubasta[0], $request->puja);
-                        endif;
-
-                        $maxValueSubasta = Subasta::getPrecioMax($decryptsubasta[0]);
-                        
-                        return response()->json(['msg'=>'sucess', 'code' => '200', 'maxValueSubasta' => $maxValueSubasta]);
-                    endif;
-                    
+                if($request->puja <= $maxValue):
+                    return response()->json(['errors'=>$validator->errors(), 'code' => '426']);
                 else:
-                    if(Puja::create($data)):
-
-                        if($request->puja > $maxValue):
-                            self::updateMaxPago($decryptsubasta[0], $request->puja);
+                    $countPuja = Puja::existPuja($usuario, $decryptsubasta[0]);
+                
+                    // valida si el usuario logeado ya tiene pujas existentes
+                    if($countPuja > 0):
+    
+                        $getPuja_id = Puja::select('puja_id')->where('user_id',$usuario)->where('subasta_id',$decryptsubasta[0])->first();
+    
+                        $Puja = Puja::find($getPuja_id->puja_id);
+    
+                        if($Puja->update($data)):
+                           
+                            // if($request->puja > $maxValue):
+                            //     self::updatePuja($getPuja_id->puja_id, $request->puja);
+                            // endif;
+    
+                            $maxValueSubasta = Puja::getPrecioMax($decryptsubasta[0]);
+                            
+                            return response()->json(['msg'=>'sucess', 'code' => '200', 'maxValueSubasta' => $maxValueSubasta]);
                         endif;
-
-                        $maxValueSubasta = Subasta::getPrecioMax($decryptsubasta[0]);
-
-                        return response()->json(['msg'=>'sucess', 'code' => '200', 'maxValueSubasta' => $maxValueSubasta]);
-                   else:
-                        return response()->json(['errors'=>$validator->errors(), 'code' => '425']);
-                   endif;
+                        
+                    else:
+                        if(Puja::create($data)):
+    
+                            // if($request->puja > $maxValue):
+                            //     self::updateMaxPago($decryptsubasta[0], $request->puja);
+                            // endif;
+    
+                            $maxValueSubasta = Puja::getPrecioMax($decryptsubasta[0]);
+    
+                            return response()->json(['msg'=>'sucess', 'code' => '200', 'maxValueSubasta' => $maxValueSubasta]);
+                       else:
+                            return response()->json(['errors'=>$validator->errors(), 'code' => '425']);
+                       endif;
+                    endif;
                 endif;
-
 
             else:
                 return response()->json(['errors'=>$validator->errors(), 'code' => '202']);
@@ -92,6 +102,14 @@ class PujaFrontController extends Controller
         Subasta::where('subasta_id',$subas_id)
         ->update([
             'precio_max' => $value
+        ]);
+    }
+
+    public function updatePuja($puja_id, $value) 
+    {
+        Puja::where('puja_id',$puja_id)
+        ->update([
+            'puja' => $value
         ]);
     }
 }

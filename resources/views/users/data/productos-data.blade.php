@@ -34,19 +34,22 @@
                         @endif
                         <td>
                             <div class="btn-group" role="group">
-
+                                @can('admin.productos.actualizar')
                                 <a href="{{ route('user.productos.edit',$encryptagid) }}"><img src="{{ url('admin_assets/images/edit.png') }}" title="Editar Producto" style="cursor: pointer; height:24px; width:24px;"></a>
+                                @endcan
 
+                                @can('admin.productos.borrar')
                                 <img src="{{ url('admin_assets/images/delete3.png') }}" onclick="eliminarProducto(<?php echo "'".$encryptagid."'"; ?>)" title="Eliminar Producto" style="cursor: pointer; height:24px; width:24px;">
-        
+                                @endcan
+
                                 @if($pro->estado!=0)
-                         
+                                    @can('admin.productos.activar')
                                     <img src="{{ url('admin_assets/images/off.png') }}" onclick="desactivarProducto(<?php echo "'".$encryptagid."'"; ?>)" title="Desactivar Producto" style="cursor: pointer; height:24px; width:24px;">&nbsp;
-        
+                                    @endcan
                                 @else 
-              
+                                    @can('admin.productos.desactivar')
                                     <img src="{{ url('admin_assets/images/on.png') }}" onclick="activarProducto(<?php echo "'".$encryptagid."'"; ?>)" title="Activar Producto" style="cursor: pointer; height:24px; width:24px;">&nbsp;
-                
+                                    @endcan
                                 @endif
                             </div>
                         </td>

@@ -80,7 +80,11 @@
 
                                             <div class="Price mt-3">    
                                                 <h5>Puja Actual:</h5>
-                                                <span id="puja_actual" class="fw-bold" style="font-size:15px; color:red">S/. {{$subasta['precio_max']}}</span>
+                                                @if($subasta['puja_max'])
+                                                    <span id="puja_actual" class="fw-bold" style="font-size:15px; color:red">S/. {{$subasta['puja_max']}}</span>
+                                                @else 
+                                                <span id="puja_actual" class="fw-bold" style="font-size:15px; color:red">S/. 0.00</span>
+                                                @endif
                                             </div>
                                             
                                         </div>
@@ -150,6 +154,19 @@
                                         <h3 class="box-producto-title">{{$subasta_relacionada['producto']}}</h3>
                                     </a>
                                     <!-- End product name -->
+                                </div>
+
+                                <div class="box-details text-center mt-auto">
+                                    <div class="text-center box-price">
+                                        @if($subasta_relacionada['precio_min']!= '0.00')
+                                            <div class="price">S/. {{$subasta_relacionada['precio_min']}}</div>
+                                        @endif
+                                    </div>
+
+                                    <div class="text-center" style="padding: 0 2px !important;">
+                                        <a href="{{ url('producto/'.$subasta_relacionada['url']) }}" class="btn btn-default btn-pri br-32 w-100" type="button" tabindex="0"><i class="fas fa-eye"></i> Ver</a>
+                                    </div>
+
                                 </div>
 
                                 

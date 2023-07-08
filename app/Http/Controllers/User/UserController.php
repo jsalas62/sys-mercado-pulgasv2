@@ -29,6 +29,7 @@ class UserController extends Controller
     public function __construct()  
     {
         $this->middleware('auth');
+        $this->middleware('can:admin.usuarios.index');
     }
 
 
@@ -72,6 +73,7 @@ class UserController extends Controller
             'apellidoUsuario' => 'required',
             'cborolusuario' => 'required|exists:roles,id',
             'emailUsuario' => 'required|email|unique:users,email',
+            'direccionUsuario' => 'required',
             'txtUsuario' => 'required|unique:users,usuario',
             'contraseniaUsuario'=>'required|min:8',
             'confirmarContraseniaUsuario'=>'required|min:8|same:contraseniaUsuario'
@@ -84,6 +86,7 @@ class UserController extends Controller
             'emailUsuario.required' => 'El Email del Usuario es requerido',
             'emailUsuario.email' => 'El Email del Usuario debe ser una dirección Válida',
             'emailUsuario.unique' => 'Ya existe el correo registrado',
+            'direccionUsuario.required' => 'La Dirección del Usuario es requerida',
             'txtUsuario.required' => 'El campo Usuario es requerido',
             'txtUsuario.unique' => 'Ya existe el Usuario',
             'contraseniaUsuario.required' => 'El Campo Contraseña es requerido',
@@ -182,7 +185,7 @@ class UserController extends Controller
         else:
             $passwordEditar = '';
             if($request->contraseniaUsuario != "" || $request->confirmarContraseniaUsuario != ""):
-                if(strlen($request->contraseniaUsuario) >=6 || strlen($request->confirmarContraseniaUsuario) >=6):
+                if(strlen($request->contraseniaUsuario) >=8 || strlen($request->confirmarContraseniaUsuario) >=8):
                     if(trim($request->contraseniaUsuario) === trim($request->confirmarContraseniaUsuario)):
                         $passwordEditar = Hash::make($request->input('contraseniaUsuario'));
                     else:
@@ -339,143 +342,5 @@ class UserController extends Controller
         return response()->json(['code' => '200']);
     }
 
-    public function getData()
-    {
-        $currentuserid = Auth::user()->user_id;
-
-        $usuariodata = User::where('user_id',$currentuserid)->first();
-
-        return view('users.misdatos', compact('usuariodata'));
-    }
-
-    public function postData(Request $request)
-    {
-        if (!$request->ajax()):
-            return redirect('/user/misdatos');
-        endif;
-
-        $rules = [
-            'nombredatausuario' => 'required',
-            'apellidodatausuario' => 'required',
-        ];
-        
-        $messages = [
-            'nombredatausuario.required' => 'El Nombre del Usuario es requerido',
-            'apellidodatausuario.required' => 'El Apellido del Usuario es requerido',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if($validator->fails()):
-            return response()->json(['errors'=>$validator->errors(), 'code' => '422']);
-        else:
-
-            $temporalFotoUsuario = 0;
-            $fotoActual = $request->fotoDataActualUsuario;
-            $foto_name = '';
-
-            $data = [
-                "nombres" =>trim($request->nombredatausuario),
-                "apellidos" =>trim($request->apellidodatausuario),
-                "telefono"=>trim($request->telefonodatausuario),
-            ];
-
-            if(isset($request->fotodatausuario) && $request->fotodatausuario!= ""):
-
-                $arrayFotoDataUsuario = explode("|*|", $request->fotodatausuario);
-                if($arrayFotoDataUsuario[2] == 1):
-                    $url = "admin_assets/images/usuarios/".$arrayFotoDataUsuario[0];
-                    $foto_name = $arrayFotoDataUsuario[0];
-                    $temporalFotoUsuario = $arrayFotoDataUsuario[2];
-                else:
-                    $url = $request->fotoDataActualUsuario;
-                endif;  
-
-                $data["foto"] = $url;
-
-            endif;
-
-            $usuario = User::find($request->hdddatausuario_id);
-
-            if($usuario->update($data)):
-                if($temporalFotoUsuario != 0):
-
-                    if($fotoActual != ""):
-                        echo UserService::exitsFotoUsuario($fotoActual);
-                    endif;
-                    echo UserService::moveFoto($foto_name);
-
-                endif;
-
-                return response()->json(['msg'=>'sucess', 'code' => '200']);
-            else:
-                return response()->json(['errors'=>$validator->errors(), 'code' => '425']);
-
-            endif;
-
-        endif;
-    }
-
-    public function getchangePassword()
-    {
-        $currentuserid = Auth::user()->user_id;
-
-        $usuariodata = User::find($currentuserid)->first();
-
-        return view('users.contrasenia', compact('usuariodata'));
-    }
-
-    public function changePassword(Request $request)
-    {
-        if (!$request->ajax()):
-            return redirect('/users/usuarios');
-        endif;
-
-        $rules = [
-            'passActualUsuario'=>'required|min:6',
-            'passNuevaUsuario'=>'required|min:6',
-            'passRepetirUsuario'=>'required|min:6|same:passNuevaUsuario'
-        ];
-        
-        $messages = [
-            'passActualUsuario.required' => 'El Campo Contraseña Actual es requerido',
-            'passActualUsuario.min' => 'La contraseña Actual debe contener al menos 6 carácteres',
-            'passNuevaUsuario.required' => 'El Campo Nueva Contraseña es requerido',
-            'passNuevaUsuario.min' => 'La Nueva contraseña debe contener al menos 6 carácteres',
-            'passRepetirUsuario.required' => 'Es necesario confirmar la contraseña',
-            'passRepetirUsuario.min' => 'La confirmación de contraseña debe contener al menos 6 carácteres',
-            'passRepetirUsuario.same' => 'Las contraseñas no coinciden.'
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if($validator->fails()):
-            return response()->json(['errors'=>$validator->errors(), 'code' => '422']);
-        else:
-
-            // $passwordActual = '$2y$10$aDKFrFO0yAmMkQ1LmeYZT.0P8RYXw58PiCDhSsx5WPKup61bucJYW';
-            $user = User::find($request->hddusuario_idcontrasenia);
-            $newpass = Hash::make(trim($request->input('passNuevaUsuario')));
-
-            if (Hash::check($request->passActualUsuario, $user->password)) {
-                // Success
-                $data = [
-                    "password" =>$newpass
-                ];
-
-                if( DB::table('users')->where('user_id', $request->hddusuario_idcontrasenia)->update($data)):
-                    return response()->json(['msg'=>'sucess', 'code' => '200']);
-                else:
-                    return response()->json(['errors'=>$validator->errors(), 'code' => '425']);
-    
-                endif;
-
-            }
-            else 
-            {
-                return response()->json(['errors'=>$validator->errors(), 'code' => '423']);
-            }
-
-        endif;
-    }
+  
 }

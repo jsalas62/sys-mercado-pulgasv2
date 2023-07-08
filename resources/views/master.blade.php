@@ -9,7 +9,7 @@
     <meta name="app-url" content="{{ url('/') }}">
     <meta name="autor" content="LolStore">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Somos una empresa dedicada a la comercialización de productos de entretinimiento">
+    <meta name="description" content="Somos una empresa dedicada a la subasta de productos">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&amp;display=swap" rel="stylesheet">
     
@@ -59,7 +59,7 @@
     <script src="{{ asset('assets/vendor/sweetalert2/sweetalert2.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/scripts.js?v=1.0') }}"></script>
-    <script src="{{ asset('assets/js/cart.js?v=1.0') }}"></script>
+
 
     @section('scripts')
     @show

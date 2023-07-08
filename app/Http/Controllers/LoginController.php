@@ -43,7 +43,7 @@ class LoginController extends Controller
             return back()->withErrors($validator)->with('message','Se ha producido un error.')->with('typealert','danger');
         else:
 
-            $credentials = (['usuario' =>$request->input('LoginUsuario'), 'password'=>$request->input('LoginPassword')]);
+            $credentials = (['usuario' =>$request->input('LoginUsuario'), 'password'=>$request->input('LoginPassword'), 'estado' => 1]);
             if (Auth::attempt($credentials)):
                 $request->session()->regenerate();
                 return redirect()->route('user.dashboard');

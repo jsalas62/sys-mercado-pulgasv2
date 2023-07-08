@@ -71,6 +71,19 @@
                                             <h3 class="box-producto-title">{{$producto['producto']}}</h3>
                                         </a>
                                     </div>
+
+                                    <div class="box-details text-center mt-auto">
+                                        <div class="text-center box-price">
+                                            @if($producto['precio_min']!= '0.00')
+                                                <div class="price">S/. {{$producto['precio_min']}}</div>
+                                            @endif
+                                        </div>
+
+                                        <div class="text-center" style="padding: 0 2px !important;">
+                                            <a href="{{ url('producto/'.$producto['url']) }}" class="btn btn-default btn-pri br-32 w-100" type="button" tabindex="0"><i class="fas fa-eye"></i> Ver</a>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         @endforeach

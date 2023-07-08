@@ -130,7 +130,7 @@
 
                             <p class="help-block font-weight-bold"><span style="color:#AB0505;">Nota: (*) Campos Obligatorios</span></p> 
                             <a class="btn btn-danger btn-icon-split" href="{{ url('/user/productos') }}"> <span class="icon text-white-50"><img src="{{ url('admin_assets/images/cancel.png') }}" width="24px"></span><span class="text">Cancelar</span></a>
-                            <button type="submit" class="btn btn-dark btn-icon-split" id="guardarProducto"><span class="icon text-white-50"><img src="{{ url('admin_assets/images/save.png') }}" width="24px"></span><span class="text">Guardar</span></button> 
+                            <button type="submit" class="btn btn-dark btn-pri btn-icon-split" id="guardarProducto"><span class="icon text-white-50"><img src="{{ url('admin_assets/images/save.png') }}" width="24px"></span><span class="text">Guardar</span></button> 
                                                 
                         </div>
                     </div>

@@ -40,22 +40,22 @@
 
                         <td>
                             <div class="btn-group" role="group">
-     
+                                @can('admin.usuarios.actualizar')
                                 <a href="{{ route('user.usuarios.edit',$encrypUserId) }}"><img src="{{ url('admin_assets/images/edit.png') }}" title="Editar Usuario" style="cursor: pointer; height:24px; width:24px;"></a>
-    
+                                @endcan
                                 
-
+                                @can('admin.usuarios.borrar')
                                 <img src="{{ url('admin_assets/images/delete3.png') }}" onclick="eliminarUsuario(<?php echo "'".$encrypUserId."'"; ?>)" title="Eliminar Usuario" style="cursor: pointer; height:24px; width:24px;">
-    
+                                @endcan
                                 
                                 @if($usu->estado!=0)
-                       
+                                        @can('admin.usuarios.activar')
                                         <img src="{{ url('admin_assets/images/off.png') }}" onclick="desactivarUsuario(<?php echo "'".$encrypUserId."'"; ?>)" title="Desactivar Usuario" style="cursor: pointer; height:24px; width:24px;">&nbsp;
-                              
+                                        @endcan
                                 @else 
-                        
+                                        @can('admin.usuarios.desactivar')
                                         <img src="{{ url('admin_assets/images/on.png') }}" onclick="activarUsuario(<?php echo "'".$encrypUserId."'"; ?>)" title="Activar Usuario" style="cursor: pointer; height:24px; width:24px;">&nbsp;
-                              
+                                        @endcan
                                 @endif
                             </div>
                         </td>

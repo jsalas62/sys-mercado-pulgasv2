@@ -20,7 +20,7 @@
             @if(count($categorias)>0)
                 @foreach($categorias as $cat)
                     <li>
-                        <a href="#">{{$cat->categoria}}</a>
+                        <a href="{{url('categorias/'.$cat['url'])}}">{{$cat->categoria}}</a>
                     </li>
                 @endforeach
             @endif

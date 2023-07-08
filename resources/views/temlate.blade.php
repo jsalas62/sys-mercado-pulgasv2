@@ -22,7 +22,6 @@
 
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/main.css?v=2.0') }}">
-    <link href="{{ asset('assets/css/custom-styles.css?v=20230516193800') }}" rel="stylesheet">
 
     <!-- Slick Js -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/slick/slick/slick.css') }}">
@@ -70,7 +69,6 @@
 
 <script src="{{ asset('assets/js/scripts.js?v=1.0') }}"></script>
 <script src="{{ asset('assets/js/scripts2.js?v=1.0') }}"></script>
-<script src="{{ asset('assets/js/cart.js?v=1.0') }}"></script>
 
 @section('scripts')
 @show

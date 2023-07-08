@@ -54,6 +54,7 @@ window.limpiarModalSubasta = function()
     $("#cboProductoId").selectpicker("destroy");
     $("#cboProductoId").selectpicker();
     $('#txtPrecioMinimo').val("");
+    // $('#txtPrecioMinimo').prop('disabled',false);
     $('#dateFechaInicio').val("");
     $('#dateFechaFin').val("");
 }
@@ -143,6 +144,14 @@ window.guardarSubasta = function(hddusuario_id){
                     text: 'La Fecha de Fin no debe ser menor a la Fecha de Inicio!'
                 })
             }
+            else  if(response.code == "426")
+            {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ERROR...',
+                    text: 'La Fecha de Inicio no debe ser menor a la Fecha Actual!'
+                })
+            }
         },
         error: function(response) {
             $("#btnGuardarSubasta").prop('disabled', false);
@@ -170,6 +179,7 @@ window.mostrarSubasta = function(subasta_id)
         $('#cboProductoId').val(data.producto_id);
         $("#cboProductoId").selectpicker("destroy");
         $("#cboProductoId").selectpicker();
+        // $('#txtPrecioMinimo').prop('disabled',true);
         $('#txtPrecioMinimo').val(data.precio_min);
         $('#dateFechaInicio').val(data.tiempo_inicio);
         $('#dateFechaFin').val(data.tiempo_fin);
@@ -250,6 +260,14 @@ window.actualizarSubasta = function(hddsubasta_id)
                         text: 'La Subasta del  producto ya Existe!'
                     });
             }
+            else  if(response.code == "427")
+            {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ERROR...',
+                    text: 'La Fecha de Inicio no debe ser menor a la Fecha Actual!'
+                })
+            }
         },
         error: function(response) {
             $("#btnGuardarCategoria").prop('disabled', false);
@@ -327,7 +345,7 @@ window.terminarSubasta = function(hddsubasta_id)
             showDenyButton: false,
             showCancelButton: true,
             confirmButtonColor: "#EB1010",
-            confirmButtonText: `Desactivar`,
+            confirmButtonText: `Finalizar`,
             cancelButtonText: `Cancelar`,
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -386,4 +404,35 @@ window.verPujas = function(hddsubasta_id)
 window.limpiarModalVerPujas = function()
 {
     $('.verPujasTbl').html("");
+}
+
+window.showGanador = function(subasta_id)
+{
+    url=$('meta[name=app-url]').attr("content") + "/user/subastas" + "/getDataGanador/" + subasta_id;
+    $("#ModalGanadorData").modal('show');
+    $.ajax({
+        url: url,
+        method:'GET'
+    }).done(function (data) {
+        $('#ModalTitleDataGanador').html('Datos del Ganador')
+        $('#lblNGanador').html(data.nombres)
+        $('#lblAGanador').html(data.apellidos)
+        $('#lblEGanador').html(data.email)
+        $('#lblTGanador').html(data.telefono)
+        $('#lblDGanador').html(data.direccion)
+        $('#lblUGanador').html(data.usuario)
+    }).fail(function () {
+        console.log("Error al cargar los datos");
+    });
+}
+
+window.LimpiarGanadorModal = function()
+{
+    $('#ModalTitleDataGanador').html('')
+    $('#lblNGanador').html('')
+    $('#lblAGanador').html('')
+    $('#lblEGanador').html('')
+    $('#lblTGanador').html('')
+    $('#lblDGanador').html('')
+    $('#lblUGanador').html('')
 }

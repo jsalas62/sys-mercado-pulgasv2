@@ -49,6 +49,7 @@
      
     </div>
 
+    @can('admin.usuarios.crear')
     <div class="row px-4">
         <div class="col-xl-12 col-md-12 col-sm-12 d-flex justify-content-end mt-4">
 
@@ -58,6 +59,8 @@
 
         </div>
     </div>
+
+    @endcan
 
     <div class="row px-4 mt-4">
         <div class="col-12 grid-margin">

@@ -39,6 +39,14 @@ $(document).ready(function () {
                         text: 'Se ha registrado la Puja correctamente'
                     });
                 }
+                else  if(response.code == "426")
+                {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ERROR!',
+                        text: 'Ingrese un monto mayor a la puja actual!'
+                    });
+                }
                 else 
                 {
                     Swal.fire({

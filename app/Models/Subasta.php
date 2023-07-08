@@ -16,6 +16,14 @@ class Subasta extends Model
 
     protected $fillable = ['user_id','producto_id','precio_min','precio_max','tiempo_inicio','tiempo_fin','estado','oculto'];
 
+    /* ESTADOS DE LA SUBASTA
+        1- Disponible 
+        2 - Finalizada 
+        3 - Cancelada 
+        4 - Verificado
+        5 - Entregado
+
+    */
     public static function getSubastaList($nproducto = '', $estado = '_all_', $user)
     {
         $subastas =  Subasta::select('subastas.subasta_id','u.usuario','p.producto','p.imagen',
@@ -66,7 +74,7 @@ class Subasta extends Model
                 $join->where('p.oculto',0);
             });
             $subastas= $subastas->where('subastas.estado',1)
-            ->orderBy('subastas.created_at', 'ASC')->get();
+            ->orderBy('subastas.created_at', 'DESC')->take(20)->get();
 
             return $subastas;
     }
@@ -74,7 +82,8 @@ class Subasta extends Model
     public static function getSubastaxUrl($url)
     {
         $subasta = Subasta::select('subastas.subasta_id','u.usuario','p.producto','p.imagen','p.url','p.descripcion_producto',
-        'subastas.precio_min','subastas.precio_max','c.categoria as categoria','c.url as categoria_url','subastas.tiempo_inicio','subastas.tiempo_fin','subastas.estado')
+        'subastas.precio_min','subastas.precio_max','c.categoria as categoria','c.url as categoria_url','subastas.tiempo_inicio',
+        'subastas.tiempo_fin','subastas.estado',DB::raw('(select max(puja) from pujas where subasta_id = subastas.subasta_id and estado= 1) as puja_max'))
         ->join('users as u', function($join)
         {
             $join->on('subastas.user_id', '=', 'u.user_id');
@@ -97,6 +106,70 @@ class Subasta extends Model
         return $subasta;
     }
 
+    public static function getSubastasFrontxUrlCategoria($url, $order)
+    {
+
+        $subastasxcat = Subasta::select('subastas.subasta_id','subastas.user_id','subastas.producto_id','subastas.precio_min',
+                        'p.producto_id', 'p.producto','p.descripcion_producto','p.imagen','p.url','c.categoria as categoria')
+                        ->join('productos as p', function($join)
+                        {
+                            $join->on('subastas.producto_id', '=', 'p.producto_id');
+                            $join->where('p.oculto',0);
+                        })
+                        ->join('categorias as c', function($join)
+                        {
+                            $join->on('p.categoria_id', '=', 'c.categoria_id');
+                            $join->where('c.oculto',0);
+                        })
+                        ->where('c.url', $url)
+                        ->where('subastas.estado',1);
+                        switch($order) {
+                            case('alfasc'):
+                                $subastasxcat->orderBy('p.producto', 'ASC');
+                                break;
+                            case('alfdesc'):
+                                $subastasxcat->orderBy('p.producto', 'DESC');
+                                break;
+                            default:
+                                $subastasxcat->orderBy('subastas.created_at', 'DESC');
+                        }
+                
+                        $subastasxcat = $subastasxcat->paginate(20);
+                
+                        return $subastasxcat;
+
+    }
+
+    public static function getProductsView($productobuscar, $order)
+    {
+        $subastas = Subasta::select('subastas.subasta_id','subastas.user_id','subastas.producto_id','subastas.precio_min',
+                                    'p.producto_id', 'p.producto','p.descripcion_producto','p.imagen','p.url')
+                                    ->join('productos as p', function($join)
+                                    {
+                                        $join->on('subastas.producto_id', '=', 'p.producto_id');
+                                        $join->where('p.oculto',0);
+                                    })
+                                    ->where('subastas.estado',1);
+                                    if($productobuscar!=""):
+                                        $subastas->where('p.producto','LIKE','%'.$productobuscar."%");
+                                    endif;
+
+                                    switch($order) {
+                                        case('alfasc'):
+                                            $subastas->orderBy('p.producto', 'ASC');
+                                            break;
+                                        case('alfdesc'):
+                                            $subastas->orderBy('p.producto', 'DESC');
+                                            break;
+                                        default:
+                                            $subastas->orderBy('subastas.created_at', 'DESC');
+                                    }
+                            
+                                    $subastas = $subastas->paginate(20);
+                            
+                                    return $subastas;
+    }
+
     public static function getPrecioMinimo($value)
     {
         $valor = Subasta::select('precio_min')->where('subasta_id',$value)->first();
@@ -110,10 +183,10 @@ class Subasta extends Model
         return $maxPuja;
     }
 
-    public static function ExistProductoInPuja($subasta, $usuario, $producto_id)
+    public static function ExistProductoInPuja($subasta, $producto_id)
     {
         $data = Subasta::where('producto_id',$producto_id)
-                ->where('user_id',$usuario)->where('estado',1)->whereNotIn('subasta_id',[$subasta])->count();
+                ->where('estado',1)->whereNotIn('subasta_id',[$subasta])->count();
         return $data;
     }
 
@@ -156,4 +229,29 @@ class Subasta extends Model
             'estado' => 2
         ]);
     }
+
+    public static function cancelSubasta($subasta_id)
+    {
+        Subasta::where('subasta_id',$subasta_id)
+        ->update([
+            'estado' => 3
+        ]);
+    }
+
+    public static function verifiedSubasta($subasta_id)
+    {
+        Subasta::where('subasta_id',$subasta_id)
+            ->update([
+                'estado' => 4
+            ]);
+    }
+
+    public static function ConfirmarRecepcionSubasta($subasta_id)
+    {
+        Subasta::where('subasta_id',$subasta_id)
+        ->update([
+            'estado' => 5
+        ]);
+    }
+    
 }
